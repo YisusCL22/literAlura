@@ -1,6 +1,6 @@
 # 📚 LiterAlura: Catálogo Interactivo de Libros
 
-Bienvenido a **LiterAlura**, un emocionante proyecto de programación diseñado para desafiar tus habilidades en Java. Aprende a realizar solicitudes a una API de libros, manipular datos JSON, almacenarlos en una base de datos y proporcionar una experiencia interactiva para el usuario a través de la consola.
+Bienvenido a **LiterAlura**, un proyecto de programación diseñado para desafiar mis habilidades en Java. Realizando solicitudes a una API de libros, manipular datos JSON, almacenarlos en una base de datos y proporcionar una experiencia interactiva para el usuario a través de la consola.
 
 ---
 
@@ -22,7 +22,6 @@ El proyecto se desarrolla utilizando las siguientes herramientas y tecnologías:
 - **Gestión de Datos**: JSON
 - **Base de Datos**: SQLite (o H2 para una opción embebida)
 - **Herramientas de Control de Versiones**: Git y GitHub
-- **Metodología Ágil**: Trello para la gestión de tareas
 
 ---
 
