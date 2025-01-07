@@ -13,7 +13,12 @@ public class BookClient {
 
     private static final String BASE_URL = "https://gutendex.com"; // Ajusta con la URL real de tu API
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    // Configura HttpClient para seguir redirecciones automáticamente
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .build();
+
+    private static final boolean DEBUG = false; // Variable de control para activar/desactivar la depuración
 
     /**
      * Recupera una lista de libros disponibles en el catálogo.
@@ -62,18 +67,29 @@ public class BookClient {
             url.deleteCharAt(url.length() - 1); // Elimina el último '&' sobrante
         }
 
-        // Imprime la URL de la solicitud en la consola
-        System.out.println("Enviando solicitud a: " + url.toString());
+        if (DEBUG) {
+            // Imprime la URL de la solicitud en la consola
+            System.out.println("Enviando solicitud a: " + url.toString());
+        }
 
-        // Crea una solicitud HTTP GET con la URL construida
+        // Crea una solicitud HTTP GET con la URL construida y añade encabezados comunes
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url.toString()))
+                .header("User-Agent", "Java HttpClient")
+                .header("Accept", "application/json")
                 .GET()
                 .build();
 
         // Envía la solicitud y obtiene la respuesta
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         
+        // Imprime la respuesta en la consola si la depuración está activada
+        if (DEBUG) {
+            System.out.println("Código de estado: " + response.statusCode());
+            System.out.println("Encabezados: " + response.headers());
+            System.out.println("Respuesta JSON: " + response.body());
+        }
+
         // Retorna el cuerpo de la respuesta como una cadena de texto
         return response.body();
     }
@@ -85,12 +101,23 @@ public class BookClient {
         // Imprime la URL de la solicitud en la consola
         System.out.println("Enviando solicitud a: " + url);
 
+        // Crea una solicitud HTTP GET con la URL construida y añade encabezados comunes
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
+                .header("User-Agent", "Java HttpClient")
+                .header("Accept", "application/json")
                 .GET()
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        // Imprime la respuesta en la consola si la depuración está activada
+        if (DEBUG) {
+            System.out.println("Código de estado: " + response.statusCode());
+            System.out.println("Encabezados: " + response.headers());
+            System.out.println("Respuesta JSON: " + response.body());
+        }
+
         return response.body();
     }
 }
