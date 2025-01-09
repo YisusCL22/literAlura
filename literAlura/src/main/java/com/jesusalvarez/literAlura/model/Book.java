@@ -1,31 +1,58 @@
 package com.jesusalvarez.literAlura.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+@Entity
+@Table(name = "books")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
-    private List<Author> authors;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "book_authors",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Set<Author> authors = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "book_id")
     private List<Translator> translators;
+
+    @ElementCollection
     private List<String> subjects;
+
+    @ElementCollection
     private List<String> bookshelves;
+
+    @ElementCollection
     private List<String> languages;
+
     private Boolean copyright;
     private String media_type;
+
+    @Transient
     private Map<String, String> formats;
+
     private int download_count;
 
     // Getters y setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = (long) id;
     }
 
     public String getTitle() {
@@ -36,12 +63,23 @@ public class Book {
         this.title = title;
     }
 
-    public List<Author> getAuthors() {
+    public Set<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(Set<Author> authors) {
         this.authors = authors;
+    }
+
+    // Métodos para agregar y remover autores
+    public void addAuthor(Author author) {
+        this.authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    public void removeAuthor(Author author) {
+        this.authors.remove(author);
+        author.getBooks().remove(this);
     }
 
     public List<Translator> getTranslators() {
